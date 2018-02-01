@@ -22,8 +22,8 @@ import imageio
 class BGAN():
     """Reference: https://wiseodd.github.io/techblog/2017/03/07/boundary-seeking-gan/"""
     def __init__(self):
-        self.img_rows = 28
-        self.img_cols = 28
+        self.img_rows = 32
+        self.img_cols = 32
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
 
@@ -115,7 +115,8 @@ class BGAN():
             label.append(0) #for cat images
         
         for i in range(0,len(images)):
-            images[i]=cv2.resize(images[i],(28,28))
+#            images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2GRAY)
+            images[i]=cv2.resize(images[i],(32,32))
 
         images=np.array(images)
         label=np.array(label)
@@ -134,7 +135,11 @@ class BGAN():
 
         # Rescale -1 to 1
         X_train = (X_train.astype(np.float32) - 127.5) / 127.5
-        X_train = np.expand_dims(X_train, axis=3)
+ #       X_train = np.expand_dims(X_train, axis=0)
+
+ #       images = (images.astype(np.float32) - 127.5) / 127.5
+ #       images = np.expand_dims(images, axis=0)
+
 
         half_batch = int(batch_size / 2)
 
@@ -195,9 +200,10 @@ class BGAN():
                 axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig("./images/mnist_%d.png" % epoch)
+        fig.savefig("./images1/mnist_%d.png" % epoch)
         plt.close()
 
+#(X_train, _), (_, _) = mnist.load_data()
 
 if __name__ == '__main__':
     bgan = BGAN()
